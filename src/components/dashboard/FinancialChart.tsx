@@ -16,8 +16,6 @@ export function FinancialChart() {
   const { data: chartData, isLoading, error } = useQuery({
     queryKey: ['financial-chart'],
     queryFn: async () => {
-      console.log('🔍 DEBUG FinancialChart - Début de la requête')
-
       // Get last 6 months
       const months = []
       for (let i = 5; i >= 0; i--) {
@@ -31,11 +29,9 @@ export function FinancialChart() {
         })
       }
 
-      console.log('🔍 DEBUG FinancialChart - Mois calculés:', months.map(m => m.label))
-
       const data = await Promise.all(
         months.map(async (month) => {
-          const { data: recettes, error: errorRecettes } = await supabase
+          const { data: recettes } = await supabase
             .from('treasury_transactions')
             .select('montant')
             .eq('type', 'recette')
@@ -43,9 +39,7 @@ export function FinancialChart() {
             .gte('date_transaction', month.start.toISOString().split('T')[0])
             .lte('date_transaction', month.end.toISOString().split('T')[0])
 
-          console.log(`🔍 DEBUG ${month.label} - Recettes:`, recettes, 'Erreur:', errorRecettes)
-
-          const { data: depenses, error: errorDepenses } = await supabase
+          const { data: depenses } = await supabase
             .from('treasury_transactions')
             .select('montant')
             .eq('type', 'depense')
@@ -53,14 +47,10 @@ export function FinancialChart() {
             .gte('date_transaction', month.start.toISOString().split('T')[0])
             .lte('date_transaction', month.end.toISOString().split('T')[0])
 
-          console.log(`🔍 DEBUG ${month.label} - Dépenses:`, depenses, 'Erreur:', errorDepenses)
-
           const totalRecettes =
             recettes?.reduce((sum, t) => sum + parseFloat(t.montant.toString()), 0) || 0
           const totalDepenses =
             depenses?.reduce((sum, t) => sum + parseFloat(t.montant.toString()), 0) || 0
-
-          console.log(`🔍 DEBUG ${month.label} - Totaux:`, { totalRecettes, totalDepenses })
 
           return {
             mois: month.label,
@@ -71,22 +61,18 @@ export function FinancialChart() {
         })
       )
 
-      console.log('🔍 DEBUG FinancialChart - Données finales:', data)
       return data
     },
   })
 
-  console.log('🔍 DEBUG FinancialChart - État:', { isLoading, error, hasData: !!chartData, dataLength: chartData?.length })
-
   if (error) {
-    console.error('🔍 DEBUG FinancialChart - ERREUR:', error)
     return (
       <Card>
         <CardHeader>
           <CardTitle>Évolution Financière (6 derniers mois)</CardTitle>
         </CardHeader>
         <CardContent className="h-[300px] flex items-center justify-center">
-          <p className="text-red-600">Erreur de chargement: {(error as Error).message}</p>
+          <p className="text-red-600">Erreur de chargement du graphique</p>
         </CardContent>
       </Card>
     )
@@ -106,7 +92,6 @@ export function FinancialChart() {
   }
 
   if (!chartData || chartData.length === 0) {
-    console.log('🔍 DEBUG FinancialChart - Aucune donnée')
     return (
       <Card>
         <CardHeader>

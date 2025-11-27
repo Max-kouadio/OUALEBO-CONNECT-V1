@@ -52,10 +52,6 @@ export default function Dashboard() {
   // KPIs Financiers (Admin, Directeur, Trésorier)
   const showFinancialKPIs = ['admin', 'directeur', 'tresorier'].includes(utilisateur?.role || '')
 
-  console.log('🔍 DEBUG Dashboard - Utilisateur:', utilisateur)
-  console.log('🔍 DEBUG Dashboard - Rôle:', utilisateur?.role)
-  console.log('🔍 DEBUG Dashboard - showFinancialKPIs:', showFinancialKPIs)
-
   const { data: transactionsEnAttente } = useQuery({
     queryKey: ['transactions-en-attente'],
     queryFn: async () => {
@@ -217,13 +213,7 @@ export default function Dashboard() {
         )}
 
         {/* Graphique Financier */}
-        {showFinancialKPIs && (
-          <>
-            {console.log('🔍 DEBUG Dashboard - Rendu du graphique FinancialChart')}
-            <FinancialChart />
-          </>
-        )}
-        {!showFinancialKPIs && console.log('🔍 DEBUG Dashboard - Graphique NON affiché (showFinancialKPIs = false)')}
+        {showFinancialKPIs && <FinancialChart />}
 
         {/* Module 2 Status Card */}
         <Card className="border-royal-gold bg-gradient-to-r from-royal-navy/5 to-royal-burgundy/5">
