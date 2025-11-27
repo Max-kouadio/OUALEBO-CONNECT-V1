@@ -92,9 +92,21 @@ export function Sidebar({ className }: SidebarProps) {
   const location = useLocation()
   const { utilisateur } = useAuth()
 
+  // 🐛 DEBUG: Afficher le rôle de l'utilisateur
+  console.log('🔍 DEBUG Sidebar - Utilisateur:', utilisateur)
+  console.log('🔍 DEBUG Sidebar - Rôle:', utilisateur?.role)
+  console.log('🔍 DEBUG Sidebar - Type du rôle:', typeof utilisateur?.role)
+
   const filteredNavItems = navItems.filter((item) => {
     if (!item.roles) return true
-    return item.roles.includes(utilisateur?.role || '')
+    const hasAccess = item.roles.includes(utilisateur?.role || '')
+
+    // 🐛 DEBUG: Afficher le résultat du filtrage
+    if (item.roles) {
+      console.log(`🔍 Module "${item.title}": roles autorisés [${item.roles.join(', ')}], utilisateur role: "${utilisateur?.role}", accès: ${hasAccess}`)
+    }
+
+    return hasAccess
   })
 
   return (
