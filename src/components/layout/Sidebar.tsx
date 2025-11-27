@@ -9,10 +9,11 @@ import {
   Users,
   CreditCard,
   UserCog,
-  MessageSquare,
   FileCheck,
   Workflow,
   Crown,
+  Send,
+  Contact,
 } from 'lucide-react'
 
 interface NavItem {
@@ -32,7 +33,6 @@ const navItems: NavItem[] = [
     title: 'Courrier',
     href: '/courrier',
     icon: Mail,
-    roles: ['admin', 'directeur', 'secretaire'],
   },
   {
     title: 'Documents',
@@ -58,7 +58,7 @@ const navItems: NavItem[] = [
   {
     title: 'CRM',
     href: '/crm',
-    icon: MessageSquare,
+    icon: Contact,
   },
   {
     title: 'Utilisateurs',
@@ -69,14 +69,12 @@ const navItems: NavItem[] = [
   {
     title: 'Communications',
     href: '/communications',
-    icon: MessageSquare,
-    roles: ['admin', 'directeur'],
+    icon: Send,
   },
   {
     title: 'Décisions',
     href: '/decisions',
     icon: FileCheck,
-    roles: ['admin', 'directeur'],
   },
   {
     title: 'Workflows',
