@@ -24,7 +24,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\.html$/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'html-cache-v2',
+              cacheName: 'html-cache-v3',
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
@@ -37,7 +37,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\.(js|css)$/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'assets-cache-v2',
+              cacheName: 'assets-cache-v3',
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
@@ -50,7 +50,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\.(png|jpg|jpeg|svg|gif|webp|ico)$/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'images-cache-v2',
+              cacheName: 'images-cache-v3',
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
@@ -62,7 +62,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\/api\/.*/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'api-cache-v2',
+              cacheName: 'api-cache-v3',
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 5, // 5 minutes
