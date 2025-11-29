@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useAudiences } from '@/hooks/useAudiences'
 import { useAuth } from '@/hooks/useAuth'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { CreateAudienceDialog } from '@/components/audiences/CreateAudienceDialog'
-import { AudienceCard } from '@/components/audiences/AudienceCard'
+// Temporaire - Composants créés aux étapes 4 et 5
+// import { CreateAudienceDialog } from '@/components/audiences/CreateAudienceDialog'
+// import { AudienceCard } from '@/components/audiences/AudienceCard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -100,7 +101,7 @@ export default function Audiences() {
           </Select>
         </div>
 
-        {/* Vue Mobile : Cards */}
+        {/* Vue Mobile : Cards - Placeholder temporaire */}
         <div className="block lg:hidden space-y-4">
           {isLoading ? (
             <div className="text-center py-8">Chargement...</div>
@@ -110,7 +111,17 @@ export default function Audiences() {
             </div>
           ) : (
             filteredAudiences?.map((audience) => (
-              <AudienceCard key={audience.id} audience={audience} />
+              <div key={audience.id} className="border rounded-lg p-4 space-y-2">
+                <h3 className="font-semibold text-lg">{audience.demandeur_nom}</h3>
+                <p className="text-sm text-muted-foreground">{audience.demandeur_contact}</p>
+                <p className="text-sm line-clamp-2">{audience.motif}</p>
+                <div className="flex gap-2">
+                  {getStatutBadge(audience.statut)}
+                  <Badge variant={audience.urgence === 'urgente' ? 'destructive' : 'outline'}>
+                    {audience.urgence === 'urgente' ? 'Urgente' : 'Normale'}
+                  </Badge>
+                </div>
+              </div>
             ))
           )}
         </div>
@@ -175,10 +186,11 @@ export default function Audiences() {
           </Table>
         </div>
 
-        <CreateAudienceDialog
+        {/* Temporaire - CreateAudienceDialog sera créé à l'ÉTAPE 5 */}
+        {/* <CreateAudienceDialog
           open={showCreateDialog}
           onOpenChange={setShowCreateDialog}
-        />
+        /> */}
       </div>
     </AppLayout>
   )
