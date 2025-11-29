@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabaseClient'
+import { supabase } from '@/lib/supabase/client'
 import {
   Table,
   TableBody,
@@ -69,14 +69,14 @@ export function CourrierList({
 
   const getStatutBadge = (statut: Courrier['statut']) => {
     const variants = {
-      recu: { variant: 'secondary' as const, label: 'Reçu' },
+      recu: { variant: 'secondary' as const, label: 'Reçu', className: '' },
       en_cours: { variant: 'default' as const, label: 'En cours', className: 'bg-blue-500' },
       traite: { variant: 'default' as const, label: 'Traité', className: 'bg-green-500' },
-      archive: { variant: 'outline' as const, label: 'Archivé' },
+      archive: { variant: 'outline' as const, label: 'Archivé', className: '' },
     }
     const config = variants[statut]
     return (
-      <Badge variant={config.variant} className={config.className}>
+      <Badge variant={config.variant} className={config.className ?? ''}>
         {config.label}
       </Badge>
     )
@@ -84,13 +84,13 @@ export function CourrierList({
 
   const getPrioriteBadge = (priorite: Courrier['priorite']) => {
     const variants = {
-      normale: { variant: 'secondary' as const, label: 'Normale' },
+      normale: { variant: 'secondary' as const, label: 'Normale', className: '' },
       urgente: { variant: 'default' as const, label: 'Urgente', className: 'bg-orange-500' },
-      tres_urgente: { variant: 'destructive' as const, label: 'Très urgente' },
+      tres_urgente: { variant: 'destructive' as const, label: 'Très urgente', className: '' },
     }
     const config = variants[priorite]
     return (
-      <Badge variant={config.variant} className={config.className}>
+      <Badge variant={config.variant} className={config.className ?? ''}>
         {config.label}
       </Badge>
     )
