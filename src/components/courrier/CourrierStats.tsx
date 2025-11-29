@@ -5,21 +5,25 @@ import { Badge } from '@/components/ui/badge'
 import type { Courrier, CourrierStats } from '@/types'
 
 export function CourrierStats() {
+  type CourrierStatRow = Pick<Courrier, 'type' | 'statut'>
+
   const { data: stats, isLoading } = useQuery<CourrierStats>({
     queryKey: ['courrier-stats'],
     queryFn: async () => {
       const { data: courriers, error } = await supabase
         .from('courrier')
         .select('type, statut')
+        .returns<CourrierStatRow[]>()
 
       if (error) throw error
 
-      const total = courriers?.length || 0
-      const arrivees = courriers?.filter((c: Courrier) => c.type === 'arrivee').length || 0
-      const departs = courriers?.filter((c: Courrier) => c.type === 'depart').length || 0
-      const en_attente = courriers?.filter(
-        (c: Courrier) => c.statut === 'recu' || c.statut === 'en_cours'
-      ).length || 0
+      const liste = courriers ?? []
+      const total = liste.length
+      const arrivees = liste.filter((c) => c.type === 'arrivee').length
+      const departs = liste.filter((c) => c.type === 'depart').length
+      const en_attente = liste.filter(
+        (c) => c.statut === 'recu' || c.statut === 'en_cours'
+      ).length
 
       return { total, arrivees, departs, en_attente }
     }
