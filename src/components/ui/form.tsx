@@ -112,6 +112,22 @@ const FormControl = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
 )
 FormControl.displayName = "FormControl"
 
+const FormDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => {
+    const { formDescriptionId } = useFormField()
+
+    return (
+      <p
+        ref={ref}
+        id={formDescriptionId}
+        className={cn("text-sm text-muted-foreground", className)}
+        {...props}
+      />
+    )
+  }
+)
+FormDescription.displayName = "FormDescription"
+
 const FormMessage = ({ className, children }: React.HTMLAttributes<HTMLParagraphElement>) => {
   const { error, formMessageId } = useFormField()
   const body = error ? String(error.message ?? "Invalid value") : children
@@ -129,4 +145,4 @@ const FormMessage = ({ className, children }: React.HTMLAttributes<HTMLParagraph
 }
 FormMessage.displayName = "FormMessage"
 
-export { Form, FormControl, FormField, FormItem, FormLabel, FormMessage }
+export { Form, FormControl, FormField, FormItem, FormLabel, FormDescription, FormMessage }
