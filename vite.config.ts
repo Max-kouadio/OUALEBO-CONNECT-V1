@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const CACHE_VERSION = 'v3'
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -24,7 +26,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\.html$/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'html-cache-v2',
+              cacheName: `html-cache-${CACHE_VERSION}`,
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
@@ -37,7 +39,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\.(js|css)$/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'assets-cache-v2',
+              cacheName: `assets-cache-${CACHE_VERSION}`,
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
@@ -50,7 +52,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\.(png|jpg|jpeg|svg|gif|webp|ico)$/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'images-cache-v2',
+              cacheName: `images-cache-${CACHE_VERSION}`,
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
@@ -62,7 +64,7 @@ export default defineConfig({
             urlPattern: /^https?:\/\/.*\/api\/.*/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'api-cache-v2',
+              cacheName: `api-cache-${CACHE_VERSION}`,
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 5, // 5 minutes

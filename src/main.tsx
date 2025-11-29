@@ -25,7 +25,7 @@ const updateSW = registerSW({
   onOfflineReady() {
     console.log('App ready to work offline')
   },
-  onRegistered(registration) {
+  onRegistered(registration: ServiceWorkerRegistration | undefined) {
     console.log('Service Worker registered successfully')
     // Check for updates every hour
     if (registration) {
@@ -34,7 +34,7 @@ const updateSW = registerSW({
       }, 60 * 60 * 1000)
     }
   },
-  onRegisterError(error) {
+  onRegisterError(error: unknown) {
     console.error('Service Worker registration failed:', error)
   },
   immediate: true,
