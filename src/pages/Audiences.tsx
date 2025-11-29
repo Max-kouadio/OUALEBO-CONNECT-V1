@@ -25,6 +25,7 @@ import {
 import { Plus, Search } from 'lucide-react'
 
 export default function Audiences() {
+  console.log('🎯 NOUVELLE VERSION AUDIENCES CHARGÉE - ' + new Date().toISOString())
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatut, setFilterStatut] = useState<string>('all')
