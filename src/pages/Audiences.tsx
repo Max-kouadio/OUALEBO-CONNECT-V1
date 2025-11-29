@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { useAudiences } from '@/hooks/useAudiences'
 import { useAuth } from '@/hooks/useAuth'
 import { AppLayout } from '@/components/layout/AppLayout'
-// Temporaire - CreateAudienceDialog sera créé à l'ÉTAPE 5
-// import { CreateAudienceDialog } from '@/components/audiences/CreateAudienceDialog'
+import { CreateAudienceDialog } from '@/components/audiences/CreateAudienceDialog'
 import { AudienceCard } from '@/components/audiences/AudienceCard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -176,11 +175,10 @@ export default function Audiences() {
           </Table>
         </div>
 
-        {/* Temporaire - CreateAudienceDialog sera créé à l'ÉTAPE 5 */}
-        {/* <CreateAudienceDialog
+        <CreateAudienceDialog
           open={showCreateDialog}
           onOpenChange={setShowCreateDialog}
-        /> */}
+        />
       </div>
     </AppLayout>
   )
