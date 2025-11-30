@@ -1,51 +1,109 @@
+import { useState } from 'react'
+import { Users, Plus } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Users } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { AudienceForm } from '@/components/audiences/AudienceForm'
+import { useAuth } from '@/contexts/AuthContext'
+import { useAudiencesList, useCreateAudience, useUpdateAudience } from '@/hooks/useAudiences'
+import type { Audience } from '@/types'
 
 export default function Audiences() {
+  const { utilisateur } = useAuth()
+  const { data: audiences, isLoading, error } = useAudiencesList()
+  const createMutation = useCreateAudience()
+  const updateMutation = useUpdateAudience()
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState<Audience | null>(null)
+
+  const canEdit = ['admin', 'directeur', 'secretaire', 'conseiller'].includes(utilisateur?.role || '')
+
+  const handleSubmit = (formData: any) => {
+    if (!utilisateur) return
+    if (selected) {
+      updateMutation.mutate({ id: selected.id, formData })
+    } else {
+      createMutation.mutate({ formData, createdBy: utilisateur.id })
+    }
+    setOpen(false)
+    setSelected(null)
+  }
+
   return (
     <AppLayout>
       <div className="space-y-6 p-6">
-        <div className="flex items-center gap-3">
-          <Users className="h-8 w-8 text-royal-burgundy" />
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Audiences Royales</h1>
-            <p className="text-muted-foreground">Gestion des demandes d'audience</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Users className="h-8 w-8 text-royal-burgundy" />
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Audiences</h1>
+              <p className="text-muted-foreground">Planification et suivi des demandes</p>
+            </div>
           </div>
+          {canEdit && (
+            <Button onClick={() => setOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" /> Nouvelle demande
+            </Button>
+          )}
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Module Audiences</CardTitle>
+            <CardTitle>Demandes d'audience</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-3">
-              <span className="h-3 w-3 rounded-full bg-green-500 shadow-[0_0_0_6px_rgba(34,197,94,0.25)]" />
-              <div>
-                <p className="text-sm font-semibold text-green-800">Version Audience à jour</p>
-                <p className="text-xs text-green-700">Cache Service Worker v3 chargé avec succès</p>
+            {isLoading && <p className="text-sm text-muted-foreground">Chargement...</p>}
+            {error && <p className="text-sm text-red-500">Erreur : {(error as Error).message}</p>}
+            {!isLoading && audiences && (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Objet</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Lieu</TableHead>
+                      <TableHead>Statut</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {audiences.map((audience) => (
+                      <TableRow key={audience.id}>
+                        <TableCell className="font-medium">{audience.objet}</TableCell>
+                        <TableCell>{new Date(audience.date_audience).toLocaleString()}</TableCell>
+                        <TableCell>{audience.lieu || '-'}</TableCell>
+                        <TableCell>{audience.statut}</TableCell>
+                        <TableCell className="text-right">
+                          {canEdit && (
+                            <Button variant="outline" size="sm" onClick={() => { setSelected(audience); setOpen(true) }}>
+                              Modifier
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            </div>
-            <div className="mt-6 space-y-3">
-              <p className="text-sm text-muted-foreground">
-                Le module Audience est prêt pour les prochaines itérations. Les fonctionnalités
-                seront progressivement activées, mais vous pouvez déjà confirmer que la dernière
-                version est bien servie par le navigateur.
-              </p>
-              <div className="grid gap-2 text-sm">
-                <p>• Workflow : Protocole → Directeur → Admin</p>
-                <p>• Planification assistée et synchronisation calendrier</p>
-                <p>• Préparation d'ordre du jour et de compte-rendu</p>
-              </div>
-              <a
-                className="inline-flex w-fit items-center gap-2 rounded-md bg-royal-burgundy px-4 py-2 text-sm font-semibold text-white shadow hover:bg-royal-burgundy/90"
-                href="/clear-cache.html"
-              >
-                🔄 Forcer le rafraîchissement du cache
-              </a>
-            </div>
+            )}
           </CardContent>
         </Card>
+
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="max-w-xl">
+            <DialogHeader>
+              <DialogTitle>{selected ? 'Modifier la demande' : 'Nouvelle demande'}</DialogTitle>
+            </DialogHeader>
+            <AudienceForm
+              audience={selected}
+              onSubmit={handleSubmit}
+              onCancel={() => { setOpen(false); setSelected(null) }}
+              isLoading={createMutation.isPending || updateMutation.isPending}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   )

@@ -50,7 +50,7 @@ export function CourrierForm({
   isLoading = false
 }: CourrierFormProps) {
   const form = useForm<CourrierFormData>({
-    resolver: zodResolver(courrierSchema),
+    resolver: zodResolver(courrierSchema) as any,
     defaultValues: courrier
       ? {
           type: courrier.type,
