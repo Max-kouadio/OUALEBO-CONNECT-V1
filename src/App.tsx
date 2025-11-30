@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import type { Utilisateur } from '@/types/utilisateur.types'
 import Login from '@/pages/Login'
 import Dashboard from '@/pages/Dashboard'
 import Courrier from '@/pages/Courrier'
@@ -13,8 +14,8 @@ import Communications from '@/pages/Communications'
 import Decisions from '@/pages/Decisions'
 import Workflows from '@/pages/Workflows'
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
+function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: Utilisateur['role'][] }) {
+  const { user, loading, utilisateur, hasRole } = useAuth()
 
   if (loading) {
     return (
@@ -26,6 +27,16 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/login" replace />
+  }
+
+  if (allowedRoles?.length) {
+    if (!utilisateur) {
+      return <Navigate to="/login" replace />
+    }
+
+    if (!hasRole(allowedRoles)) {
+      return <Navigate to="/dashboard" replace />
+    }
   }
 
   return <>{children}</>
@@ -71,7 +82,7 @@ function AppRoutes() {
       <Route
         path="/courrier"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur', 'secretaire']}>
             <Courrier />
           </ProtectedRoute>
         }
@@ -79,7 +90,7 @@ function AppRoutes() {
       <Route
         path="/documents"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur', 'secretaire']}>
             <Documents />
           </ProtectedRoute>
         }
@@ -87,7 +98,7 @@ function AppRoutes() {
       <Route
         path="/calendrier"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur', 'secretaire', 'conseiller']}>
             <Calendrier />
           </ProtectedRoute>
         }
@@ -95,7 +106,7 @@ function AppRoutes() {
       <Route
         path="/audiences"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur', 'secretaire', 'conseiller']}>
             <Audiences />
           </ProtectedRoute>
         }
@@ -103,7 +114,7 @@ function AppRoutes() {
       <Route
         path="/tresorerie"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur', 'tresorier']}>
             <Tresorerie />
           </ProtectedRoute>
         }
@@ -111,7 +122,7 @@ function AppRoutes() {
       <Route
         path="/crm"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur', 'conseiller']}>
             <CRM />
           </ProtectedRoute>
         }
@@ -119,7 +130,7 @@ function AppRoutes() {
       <Route
         path="/utilisateurs"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur']}>
             <Utilisateurs />
           </ProtectedRoute>
         }
@@ -127,7 +138,7 @@ function AppRoutes() {
       <Route
         path="/communications"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur', 'secretaire']}>
             <Communications />
           </ProtectedRoute>
         }
@@ -135,7 +146,7 @@ function AppRoutes() {
       <Route
         path="/decisions"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur']}>
             <Decisions />
           </ProtectedRoute>
         }
@@ -143,7 +154,7 @@ function AppRoutes() {
       <Route
         path="/workflows"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'directeur']}>
             <Workflows />
           </ProtectedRoute>
         }
