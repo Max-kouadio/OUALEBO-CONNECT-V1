@@ -1,2 +1,5 @@
 export * from './utilisateur.types'
 export * from './courrier.types'
+export * from './documents'
+export * from './audiences'
+export * from './evenements'
