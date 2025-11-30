@@ -1,4 +1,4 @@
-import type { FieldValues, Resolver } from 'react-hook-form'
+import type { Resolver } from 'react-hook-form'
 import type { ZodSchema, ZodError } from 'zod'
 
 const formatErrors = (error: ZodError) => {
@@ -15,7 +15,7 @@ const formatErrors = (error: ZodError) => {
   return fieldErrors
 }
 
-export const zodResolver = <TFieldValues extends FieldValues>(schema: ZodSchema<TFieldValues>): Resolver<TFieldValues> => async (
+export const zodResolver = (schema: ZodSchema<any>): Resolver<any> => async (
   values
 ) => {
   const result = schema.safeParse(values)
