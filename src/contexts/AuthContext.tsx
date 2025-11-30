@@ -9,6 +9,7 @@ interface AuthContextType {
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  hasRole: (roles: Utilisateur['role'][]) => boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -46,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const loadUtilisateur = async (userId: string) => {
+    setLoading(true)
     try {
       const { data, error } = await supabase
         .from('utilisateurs')
@@ -72,6 +74,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const hasRole = (roles: Utilisateur['role'][]): boolean => {
+    if (!utilisateur) return false
+    return roles.includes(utilisateur.role)
+  }
+
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -86,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, utilisateur, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, utilisateur, loading, signIn, signOut, hasRole }}>
       {children}
     </AuthContext.Provider>
   )

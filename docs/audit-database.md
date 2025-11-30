@@ -19,3 +19,6 @@
 2. **Rétablir la table `utilisateurs`** et ses indexes/constraints, puis ajuster les FK des modules existants.
 3. **Appliquer RLS** sur chaque table avec des policies conformes aux rôles (admin/directeur/secrétaire/trésorier/conseiller) et vérifier les contraintes d’accès (lecture restreinte, création limitée par rôle, suppression limitée aux responsables).
 4. **Compléter les fonctions métier** (génération numéro courrier, synchro audiences→évènements, audit logs) et prévoir un dossier `supabase/migrations` versionné.
+
+## Migrations P0 appliquées
+- `supabase/migrations/202502200001_phase1_schema_and_rls.sql` : ajoute les tables Phase 1 (utilisateurs, courrier, documents, événements, audiences), les triggers `updated_at`/numérotation courrier, l’activation RLS et les policies de base par rôle.
